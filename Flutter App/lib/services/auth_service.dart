@@ -1,11 +1,22 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 class AuthService {
 
-  // URL de tu backend Node.js
-  static const String baseUrl = 'http://10.0.2.2:3000';
+  // URL dinámica según plataforma
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:3000';
+    } else if (Platform.isAndroid) {
+      return 'http://10.0.2.2:3000';
+    } else {
+      return 'http://localhost:3000';
+    }
+  }
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -45,7 +56,7 @@ class AuthService {
 
       return {
         'success': false,
-        'message': 'Error de conexi�n: $e'
+        'message': 'Error de conexi�n: $e'
       };
 
     }
